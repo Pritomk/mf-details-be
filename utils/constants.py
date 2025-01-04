@@ -1,0 +1,10 @@
+NOT_VALID_CODE='Not a valid mutualfund code'
+SUCCESSFULL='Successfully fetched'
+LENGTH_SHORT='Length is too short'
+
+CODE='code'
+INVESTED='invested'
+DATAS='datas'
+START='start_date'
+END='end_date'
+KEYWORD='keyword'
