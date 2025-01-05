@@ -1,14 +1,31 @@
 from mftool import Mftool
-from utils import utility
+from utils.utility import get_friday, get_thursday, get_today, get_yesterday_date, is_holiday, is_tuesday
+import json
+from itertools import islice
 
 mf = Mftool()
 
 
 def fetch_mf_names(keyword):
-    result = mf.get_available_schemes(keyword)
+    result = {}
+    keyword = keyword.lower()
+    with open('latest-funds.json', 'r') as file:
+        funds = json.load(file)
+        keyword_list = keyword.split(' ');
+        print(keyword_list)
+        for key, val in funds.items():
+            found = True
+            for key_item in keyword_list:
+                if key_item not in val.lower():
+                    found = False
+                    break
+            if (found):
+                result[key] = val
+    
     total_size = len(result)
-    top_10_mf = list(result.items())[:10]
+    top_10_mf = dict(islice(result.items(), 10))
     return True, total_size, top_10_mf
+
 
 def fetch_scheme_info(code):
     
@@ -44,14 +61,14 @@ def get_day_change(code, invested):
     today_nav = 0
     yesterday_nav = 0
     
-    if utility.is_holiday():
-        two_days_datas = mf.get_scheme_historical_nav_for_dates(code, start_date=utility.get_thursday(), end_date=utility.get_friday()).get('data')
+    if is_holiday():
+        two_days_datas = mf.get_scheme_historical_nav_for_dates(code, start_date=get_thursday(), end_date=get_friday()).get('data')
         
         today_nav = two_days_datas[1].get('nav')
         yesterday_nav = two_days_datas[0].get('nav')
         
-    elif utility.is_tuesday():
-        friday_datas = mf.get_scheme_historical_nav_for_dates(code, start_date=utility.get_friday(), end_date=utility.get_today()).get('data')
+    elif is_tuesday():
+        friday_datas = mf.get_scheme_historical_nav_for_dates(code, start_date=get_friday(), end_date=get_today()).get('data')
         
         quote = mf.get_scheme_quote(code)
         today_nav = quote.get('nav')
@@ -62,7 +79,7 @@ def get_day_change(code, invested):
         quote = mf.get_scheme_quote(code)
         today_nav = float(quote.get('nav'))
     
-        yesterday_nav = mf.get_scheme_historical_nav_for_dates(code, start_date=utility.get_yesterday_date(), end_date=utility.get_current_date()).get('data')[0].get('nav')
+        yesterday_nav = mf.get_scheme_historical_nav_for_dates(code, start_date=get_yesterday_date(), end_date=get_today()).get('data')[0].get('nav')
         yesterday_nav = float(yesterday_nav)
     
     final_daychange_val = (float(today_nav) / float(yesterday_nav)) * invested;
