@@ -1,14 +1,17 @@
 from flask import Blueprint, request, jsonify, abort
 from controllers.mf_controller import get_mf_names, fetch_scheme_information, calculate_return_scheme, get_day_change_info, calculate_bulk_return_scheme, get_bulk_day_change_info
 from utils import constants
+from flask_cors import cross_origin
 
 mf_routes = Blueprint('mf_routes',__name__)
 
 @mf_routes.route('/', methods=['GET'])
+@cross_origin(supports_credentials=True)
 def greet():
     return 'Server is working'
 
 @mf_routes.route('/search', methods=['GET'])
+@cross_origin(supports_credentials=True)
 def search_mf_names():
     keyword = request.args.get(constants.KEYWORD, default='tata')
 
@@ -25,6 +28,7 @@ def search_mf_names():
     })
     
 @mf_routes.route('/latest-info', methods=['GET'])
+@cross_origin(supports_credentials=True)
 def get_latest_info():
     mf_code = request.args.get('code', default=-1)
     
@@ -42,6 +46,7 @@ def get_latest_info():
     })
     
 @mf_routes.route('/return', methods=['POST'])
+@cross_origin(supports_credentials=True)
 def get_return():
     json = request.get_json()
     
@@ -61,6 +66,7 @@ def get_return():
     })
 
 @mf_routes.route('/daychange', methods=['POST'])
+@cross_origin(supports_credentials=True)
 def get_day_change_information():
     json = request.get_json()
     
@@ -75,6 +81,7 @@ def get_day_change_information():
     })
 
 @mf_routes.route('/bulk-return', methods=['POST'])
+@cross_origin(supports_credentials=True)
 def get_bulk_return():
     json = request.get_json()
     
@@ -92,6 +99,7 @@ def get_bulk_return():
     })   
 
 @mf_routes.route('/bulk-daychange', methods=['POST'])
+@cross_origin(supports_credentials=True)
 def get_bulk_daychange():
     
     json = request.get_json()

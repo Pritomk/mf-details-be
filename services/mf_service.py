@@ -42,7 +42,7 @@ def calculate_return(code, invested, start, end=None):
 
     data = None
     if (end == None):
-        data = mf.get_scheme_historical_nav_for_dates(code=code, start_date=start, end_date=utility.get_today()).get('data')
+        data = mf.get_scheme_historical_nav_for_dates(code=code, start_date=start, end_date=get_today()).get('data')
     else :
         data = mf.get_scheme_historical_nav_for_dates(code=code, start_date=start, end_date=end).get('data')
         
