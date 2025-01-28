@@ -1,3 +1,4 @@
 flask
 gunicorn
 mftool
+flask_cors
