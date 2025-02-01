@@ -7,7 +7,7 @@ mf = Mftool()
 
 
 def fetch_mf_names(keyword):
-    result = {}
+    result = []
     keyword = keyword.lower()
     with open('latest-funds.json', 'r') as file:
         funds = json.load(file)
@@ -20,10 +20,13 @@ def fetch_mf_names(keyword):
                     found = False
                     break
             if (found):
-                result[key] = val
+                result.append(dict(
+                    mf_code= key,
+                    mf_name= val
+                ))
     
     total_size = len(result)
-    top_10_mf = dict(islice(result.items(), 10))
+    top_10_mf = result[:10]
     return True, total_size, top_10_mf
 
 
