@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify, abort
-from controllers.mf_controller import get_mf_names, fetch_scheme_information, calculate_return_scheme, get_day_change_info, calculate_bulk_return_scheme, get_bulk_day_change_info
+from controllers.mf_controller import get_mf_names, fetch_scheme_information, calculate_return_scheme, get_day_change_info, calculate_bulk_return_scheme, get_bulk_day_change_info, get_bulk_day_change_unit_info
 from utils import constants
 from flask_cors import cross_origin
 
@@ -112,6 +112,21 @@ def get_bulk_daychange():
         "status": status,
         "message": msg,
         "return": total_return
+    })
+    
+@mf_routes.route('/bulk-unit-daychange', methods=['POST'])
+@cross_origin(supports_credentials=True)
+def get_bulk_daychange_unit():
+    json = request.get_json()
+    
+    datas = json.get(constants.DATAS)
+    
+    status, msg, total_return =  get_bulk_day_change_unit_info(datas)
+    
+    return jsonify({
+        "status": status,
+        "message": msg,
+        "daychange": total_return
     })
 
 def register_routes(app):

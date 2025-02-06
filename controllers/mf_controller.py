@@ -1,4 +1,4 @@
-from services.mf_service import fetch_mf_names, fetch_scheme_info, calculate_return, get_day_change
+from services.mf_service import fetch_mf_names, fetch_scheme_info, calculate_return, get_day_change, get_day_change_in_unit
 from utils import constants
 
 def get_mf_names(keyword):
@@ -57,10 +57,28 @@ def get_bulk_day_change_info(datas):
     
     for investement_datas in datas:
         
-        invested = investement_datas.get('invested')
-        code = investement_datas.get('code')
+        invested = investement_datas.get(constants.INVESTED)
+        code = investement_datas.get(constants.CODE)
         
         status, return_amount = get_day_change(code, invested)
+        
+        if (status == False):
+            return status, constants.NOT_VALID_CODE, '-1'
+        
+        total_return += return_amount
+        
+    return False, constants.SUCCESSFULL, total_return
+
+def get_bulk_day_change_unit_info(datas):
+
+    total_return = 0;
+    
+    for investement_datas in datas:
+        
+        invested_unit = investement_datas.get(constants.INVESTED_UNIT)
+        code = investement_datas.get(constants.CODE)
+        
+        status, return_amount = get_day_change_in_unit(code, invested_unit)
         
         if (status == False):
             return status, constants.NOT_VALID_CODE, '-1'

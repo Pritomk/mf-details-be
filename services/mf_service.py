@@ -88,3 +88,37 @@ def get_day_change(code, invested):
     final_daychange_val = (float(today_nav) / float(yesterday_nav)) * invested;
     
     return True, final_daychange_val
+
+
+def get_day_change_in_unit(code, invested_unit):
+
+    if not mf.is_valid_code(code):
+        return False, 'Is not a valid mutual fund code'
+        
+    today_nav = 0
+    yesterday_nav = 0
+    
+    if is_holiday():
+        two_days_datas = mf.get_scheme_historical_nav_for_dates(code, start_date=get_thursday(), end_date=get_friday()).get('data')
+        
+        today_nav = two_days_datas[1].get('nav')
+        yesterday_nav = two_days_datas[0].get('nav')
+        
+    elif is_tuesday():
+        friday_datas = mf.get_scheme_historical_nav_for_dates(code, start_date=get_friday(), end_date=get_today()).get('data')
+        
+        quote = mf.get_scheme_quote(code)
+        today_nav = quote.get('nav')
+        
+        yesterday_nav = friday_datas[0].get('nav')
+
+    else:
+        quote = mf.get_scheme_quote(code)
+        today_nav = float(quote.get('nav'))
+    
+        yesterday_nav = mf.get_scheme_historical_nav_for_dates(code, start_date=get_yesterday_date(), end_date=get_today()).get('data')[0].get('nav')
+        yesterday_nav = float(yesterday_nav)
+    
+    final_daychange_val = (float(today_nav) * invested_unit) - (float(yesterday_nav)* invested_unit);
+    
+    return True, final_daychange_val

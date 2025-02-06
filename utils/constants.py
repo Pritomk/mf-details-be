@@ -4,6 +4,7 @@ LENGTH_SHORT='Length is too short'
 
 CODE='code'
 INVESTED='invested'
+INVESTED_UNIT='invested_unit'
 DATAS='datas'
 START='start_date'
 END='end_date'
