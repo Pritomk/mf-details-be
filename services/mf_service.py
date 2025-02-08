@@ -67,8 +67,8 @@ def get_day_change(code, invested):
     if is_holiday():
         two_days_datas = mf.get_scheme_historical_nav_for_dates(code, start_date=get_thursday(), end_date=get_friday()).get('data')
         
-        today_nav = two_days_datas[1].get('nav')
-        yesterday_nav = two_days_datas[0].get('nav')
+        today_nav = two_days_datas[0].get('nav')
+        yesterday_nav = two_days_datas[1].get('nav')
         
     elif is_tuesday():
         friday_datas = mf.get_scheme_historical_nav_for_dates(code, start_date=get_friday(), end_date=get_today()).get('data')
@@ -101,8 +101,8 @@ def get_day_change_in_unit(code, invested_unit):
     if is_holiday():
         two_days_datas = mf.get_scheme_historical_nav_for_dates(code, start_date=get_thursday(), end_date=get_friday()).get('data')
         
-        today_nav = two_days_datas[1].get('nav')
-        yesterday_nav = two_days_datas[0].get('nav')
+        today_nav = two_days_datas[0].get('nav')
+        yesterday_nav = two_days_datas[1].get('nav')
         
     elif is_tuesday():
         friday_datas = mf.get_scheme_historical_nav_for_dates(code, start_date=get_friday(), end_date=get_today()).get('data')
@@ -118,7 +118,13 @@ def get_day_change_in_unit(code, invested_unit):
     
         yesterday_nav = mf.get_scheme_historical_nav_for_dates(code, start_date=get_yesterday_date(), end_date=get_today()).get('data')[0].get('nav')
         yesterday_nav = float(yesterday_nav)
+        
+    todays_unit_val = float(today_nav) * float(invested_unit)
+    yesterday_unit_val = float(yesterday_nav)* float(invested_unit)
+                
+    final_daychange_val = todays_unit_val - yesterday_unit_val
     
-    final_daychange_val = (float(today_nav) * invested_unit) - (float(yesterday_nav)* invested_unit);
-    
+    # quote = mf.get_scheme_quote(code)
+    # print(f"{quote['scheme_name']} --> {final_daychange_val}")
+        
     return True, final_daychange_val
